@@ -28,8 +28,9 @@
       - [2.4.1 Forming a GET request in Postman](#241-forming-a-get-request-in-postman)
       - [2.4.2 Verification](#242-verification)
     - [2.5 Adding a review to the FarmStall API](#25-adding-a-review-to-the-farmstall-api)
-      - [Forming a POST request in Postman](#forming-a-post-request-in-postman)
-      - [Verification](#verification)
+      - [2.5.1 Forming a POST request in Postman](#251-forming-a-post-request-in-postman)
+        - [Listing 2.2 JSON request body for POST /review](#listing-22-json-request-body-for-post-review)
+      - [2.5.2 Verification](#252-verification)
     - [2.6 Practice](#26-practice)
       - [Cat (and other animal) facts API](#cat-and-other-animal-facts-api)
       - [Random avatar API](#random-avatar-api)
@@ -973,9 +974,99 @@ Now let’s try creating a new review by executing a POST request.
 
 ### 2.5 Adding a review to the FarmStall API
 
-#### Forming a POST request in Postman
+The operation for adding a review via the FarmStall API is POST /reviews
+(see table 2.3). It takes no query parameters but it does require a body. In this
+case, the response isn’t the most interesting part of the operation; what is
+more interesting is that we are adding data into the API.
 
-#### Verification
+|Method| URI| Query params| Body|
+|------|----|-------------|------|
+|POST |/reviews| N/A |{"message": "Was good.", "rating": 5}|
+
+One of the key differences between POST and GET is the request body. One
+could conceivably send data in query parameters, but they impose too many
+limitations, from the size limitations of query parameters to the fact that they
+cannot contain binary data. A request body doesn’t have these limitations—
+the size is limited only by practicality, and the body can contain binary data.
+
+NOTE ⚠️ Another interesting benefit of sending data in the body is security. Query parameters are part
+of the URL, and as such are often logged by servers and proxies. If you were to send secret data in
+query parameters, there is a good chance it would be recorded somewhere between your client and the
+server. Bodies are usually not processed by proxies, nor are they typically logged.
+
+#### 2.5.1 Forming a POST request in Postman
+
+In the POST /reviews operation, the body is required to be in JSON
+format. In this format, it’s an object that has two fields—message and
+rating:
+
+- message is a string, and it’s the feedback for the farmer’s market.
+- rating is a number, from 1 to 5 inclusive. This will indicate our
+general experience, where 1 is the worst and 5 is the best.
+
+Let’s build the request.
+
+##### Listing 2.2 JSON request body for POST /review
+
+```json
+{
+"message": "was pretty good.",
+"rating": 4
+}
+```
+
+As before with the GET /reviews operation, we need to combine the URI
+with the base URL of the server to form the following complete URL:
+
+```URI
+https://farmstall.designapis.com/v1/reviews
+```
+
+Now let’s go through what we need to do in Postman in order to execute this
+request:
+
+1. Change the method to POST.
+2. Type out the URL,
+<https://farmstall.designapis.com/v1/reviews> (the same as
+for GET /reviews).
+3. Select the Body tab, so that we can type out the body.
+4. Type out the JSON body, which includes the message and rating
+fields.
+5. Ensure that the content type is set to JSON (or application/json).
+
+That last step will set a special header called Content-Type, which
+indicates to the server which media type the data is in (more on that later).
+Since the UI of Postman could change, you’ll need to double-check that this
+header is set correctly.
+
+Go ahead and make the preceding changes in Postman, as shown in figure
+2.4. Your request is now ready to send. When you click the Send button, the
+new review should be created.
+
+![2.4 Postman—posting a pretty good review](Docs/img/10.png)
+
+To confirm that the review was created, look in the response body section of
+Postman. Also look for a status code of 201, which indicates “Resource
+Created” or just “Created.” See listing 2.3 for the response body and figure
+2.5 for where it appears in Postman.
+![2.5 Postman—POST /review response](Docs/img/11.png)
+
+```json
+{
+    "message": "was pretty good.",
+    "rating": 4,
+    "uuid": "caeee6d0-a7cd-46b8-a5e6-505f8d1132a6",
+    "userId": null
+}
+```
+
+Note ⚠️ that this value will vary (it’s random).
+
+NOTE ⚠️ A lot of terms are used to refer to creating a request and executing it. Sending, executing,
+calling, and requesting all have the same meaning, and you will often find these words used
+interchangeably. You can use whichever feels more natural, but if in doubt, use the term execute.
+
+#### 2.5.2 Verification
 
 ### 2.6 Practice
 
