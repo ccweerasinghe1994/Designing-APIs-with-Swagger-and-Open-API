@@ -641,6 +641,18 @@ HTTP-based APIs.
 
 #### For API consumers
 
+When you’re required to consume an API, your first instinct might be to
+reach for an SDK for that API written in your programming language. Many
+of the popular APIs have put great care and effort into making these SDKs
+available to consumers, but many other APIs simply don’t have the
+resources to write SDKs for one or more languages. If the API has been
+described with OpenAPI (whether by the producer or by you), you can
+generate SDKs for many different languages. The SDK templates provided
+by tools such as Swagger Codegen or OpenAPI Generator are usually
+sufficient and will give you a good head start for developing clients. But
+even more power can be extracted by customizing and creating templates
+specific to your needs that will work with any API described by OpenAPI.
+
 #### For API producers
 
 #### For API designers
