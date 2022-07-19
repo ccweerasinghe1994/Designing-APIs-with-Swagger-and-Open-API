@@ -329,9 +329,72 @@
 
 ## 1 Introducing APIs and OpenAPI
 
+This chapter covers
+
+- 🎯 Describing an API ecosystem
+- 🎯 What OpenAPI and Swagger are
+- 🎯 When to use OpenAPI
+
+An overview of this book
+In this chapter we’ll take a look at the world of APIs and OpenAPI so we
+can give you an overview of the topics covered in this book. We’ll start by
+looking at the benefits of describing an API, at how these descriptions form
+part of an API ecosystem, and where OpenAPI fits in. We’ll look at an
+example of an OpenAPI document and see when to use OpenAPI in practice.
+Let’s get started.
+
 ### 1.1 What is an API ecosystem?
 
+We like the word ecosystem. It describes the interactions and relationships
+between living and nonliving things within a fully functioning environment.
+We like to picture a wetland pond with frogs, wild grasses, and stones for
+some reason, but you may imagine something a little different—either way,
+the principle of an interactive, symbiotic system remains. If we borrow
+(cough, maybe steal) this principle from biology, we can use it to describe
+the world of APIs within a team or organization:
+
+- The living, changing variables represent elements that we have control
+over. These are the things we make, such as our services, stacks, or
+code.
+
+- The fixed, nonliving components are the useful things we can benefit
+from but cannot easily change. These are the libraries and external
+services we use.
+
+- And, of course, there is the environment. It could be the internet, an
+internal network, or a tiny device stuck on the roof of our house—
+perhaps even all of them.
+
+All of these pieces together form a complete ecosystem. When these parts
+are moving in harmony, our system is healthy, and our developers,
+consumers, and users are all happy. It is how these interactions and
+relationships evolve that is central.
+
+APIs define what each service is capable of providing and how others can
+interact with that service. When we assume the role of an “API designer,”
+our job is to create these APIs for services in a way that incorporates
+feedback from consumers and ensures that changes are communicated ahead
+of time.
+
+Why “API ecosystem” and not “service ecosystem” or perhaps even just
+“ecosystem,” you might ask? In this book we’re interested in APIs, so
+naturally we’ll focus on that aspect. Since APIs are the contracts that hold
+together the ecosystem, it is not an unreasonable focal point. APIs are a very
+important part of the ecosystem, without which our services would be
+isolated. Understanding APIs gives us a holistic perspective.
+
+This book will focus on APIs and how OpenAPI helps make them easier to
+work with.
+
 ### 1.2 Describing things
+
+If we look at our ecosystem as individual services, we’ll fail to see how they
+form a complete system. It’s how they are connected that gives us the bigger
+picture. When those services change without updating all of their
+dependencies, the ecosystem loses functionality and in some cases can
+completely break.
+
+Let’s look at a story that illustrates this idea.
 
 #### Bridget’s task
 
