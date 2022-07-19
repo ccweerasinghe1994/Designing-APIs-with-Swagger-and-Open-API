@@ -503,11 +503,141 @@ result would look something like figure
 
 ### 1.4 Where do OpenAPI definitions fit in?
 
+Once we have an API definition, we can use tools to leverage them, build
+bigger abstractions, and create more automated workflows. Definitions are
+machine readable.
+
+Figure 1.2 shows how OpenAPI definitions could fit into an organization’s
+workflows. The definitions can be created by tools or by extracting
+annotations from code. They are then transformed into API documentation,
+server stubs, and client SDKs. This is just one example. Other workflows
+could be designed, depending on the business cases.
+
+![Creating and using OpenAPI definitions](Docs/img/4.png)
+
+Other workflows could include
+
+- Automating parts of API testing
+- Getting early feedback on the design of an API
+- Ensuring API consistency
+- Comparing API changes across versions
+
+The beauty of OpenAPI is that once you have an OpenAPI definition, the
+rest (pun intended) is simply a matter of leveraging it for your needs.
+
 ### 1.5 What is Swagger?
+
+In the beginning there was Swagger UI and a rough guide for writing YAML
+files that described HTTP APIs. Later, more tools were built that relied on
+this guide, which soon became a specification and a standard. The tools and
+this specification were collectively known as “Swagger.” The specification
+grew more mature and was released as open source, which encouraged the
+community to create even more tools. They soon began to contribute
+features to the specification, which finally began to be adopted by large
+companies.
+
+In 2015 Swagger was adopted by SmartBear, which then donated the
+specification part to the Linux Foundation (www.linuxfoundation.org).
+During that transfer, the specification was renamed as the “OpenAPI
+specification,” and SmartBear retained the copyright for the term “Swagger.”
+
+Today, as a result of this historical quirk, you’ll find the terms used
+interchangeably. Going forward, we are encouraged to use the term
+“OpenAPI” to refer the heart of this ecosystem—the specification—and to
+use “Swagger” to refer to the specific set of tools managed by SmartBear
+(which includes Swagger UI, Swagger Editor, Swagger Parser, and at least a
+dozen more). Many, many other tools are also built to use OpenAPI.
+
+NOTE ⚠️ There is an old standard, the Web Application Description Language (WADL; pronounced
+“waddle”), which was inspired by SOAP’s WSDL specification and used XML. It could have been
+used instead of Swagger to describe HTTP APIs. The team working on Swagger used to joke, “Why
+WADL when you can Swagger?” And so the name was born.
 
 ### 1.6 What about REST?
 
+REST (representational state transfer) is a collection of ideas about how to
+design networked systems (in particular, server/client systems). While REST
+is not restricted to HTTP-based APIs, they are both closely linked in
+practice. RESTful APIs now drive the majority of web servers on the
+internet.
+
+The principles of REST were outlined by Roy Fielding in his dissertation on
+networked systems, which was released in the year 2000
+(www.ics.uci.edu/~fielding/pubs/dissertation/top.htm). Whether an API is
+RESTful or not is determined by how closely it adheres to the ideas (or
+constraints) of that dissertation. What is considered RESTful or not is a little
+subjective and sparks heated debates. Out in the wild, HTTP-based APIs
+have to make trade-offs between what they require and how standard or
+RESTful they are. It is a balancing act that all API producers have to
+manage.
+
+The ideas in REST aim to be simple and to decouple the API from the
+underlying services that serve the API. It uses a request-response model and
+is stateless, as all the information necessary to do something is contained
+within the request.
+
+One of the key ideas behind REST is that of a resource. Things such as user
+accounts, billing reminders, or even the weather in San Francisco are all
+resources, and each resource is identified by a URI. For a user’s account, we
+might have the URI /users/123, which uniquely identifies a user resource
+within the API.
+
+Consumers will want to be able to do things to and with resources. Think of
+these actions as verbs. HTTP has a set of well-defined ones, such as POST,
+GET, PUT, DELETE, and PATCH, all derived from the ideas in REST. In
+HTML, if you want to fetch data related to a resource, you would use theGET method. If you want to create a new resource, you could use the POST
+method. In chapter 10 we’ll dive deeper into URL structures and HTTP
+verbs.
+
+Where REST starts and HTTP ends is a tricky question to answer, but the
+rule of thumb is that HTTP is the protocol and REST is a way of designing
+APIs. HTTP has incorporated many of the ideas of REST into its protocol,
+which is why they are so closely related. Typically we’ll more often note
+when an HTTP API is not RESTful, meaning that it doesn’t conform to the
+design patterns outlined by REST.
+
+OpenAPI was designed to describe as many HTTP-based APIs as possible,
+but not all of them. Its major constraint (and a huge benefit of OpenAPI) is
+that it is designed to allow tools to generate usable code from the definitions;
+this came with the trade-off that not every facet of an API can be described,
+because they can’t all be well defined enough in the specification for both
+humans and machines.
+
+A quick note about hypermedia ⚠️
+
+In Fielding’s REST paper, he mentions the idea of hypermedia: a system of returning contextaware links in the form of URIs. For example, if you were to execute a GET on a
+/users/{userId} resource, it could return a link (a URI) to the login operation for that
+user and another to execute a password reset. The links are related to the resource (at that point
+in time), and they decouple clients from needing to know those URIs outside of the response.
+This is a crude description of a very powerful model.
+
+Many REST purists point out that this is a sorely missed component of RESTful APIs. In
+OpenAPI (particularly version 3.0.0+), support was added to help document these hypermedia
+links, but their semantics are out of scope for the OpenAPI specification. OpenAPI can describe
+what is required by hypermedia APIs, but not what each link should do. There are other
+specifications that attempt to tackle describing those details. Here are a few:
+
+- HATEOAS: <https://restfulapi.net/hateoas/>
+- Siren: <https://github.com/kevinswiber/siren>
+- Hydra: <https://www.hydra-cg.com/>
+
 ### 1.7 When to use OpenAPI
+
+Always.
+
+We hope that statement triggered the picture of grinning authors. We
+couldn’t resist being snarky. But no, like all technologies, OpenAPI isn’t
+always necessary. OpenAPI describes HTTP-based APIs (including RESTful
+APIs), so when you’re tasked with designing, managing, and consuming an
+HTTP API, using OpenAPI will give you value.
+
+If you’re dealing with other API technologies that don’t leverage HTTP
+semantics (like methods, URLs, headers, and bodies), OpenAPI will have
+limited value to you. Examples of those API types include gRPC and
+GraphQL.
+
+In this section, when we talk about APIs, we’re referring specifically to
+HTTP-based APIs.
 
 #### For API consumers
 
