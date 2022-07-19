@@ -25,10 +25,11 @@
     - [2.3 FarmStall API](#23-farmstall-api)
     - [2.4 Our first request](#24-our-first-request)
       - [Forming a GET request in Postman](#forming-a-get-request-in-postman)
-      - [Verification](#verification)
+      - [2.4.1 Forming a GET request in Postman](#241-forming-a-get-request-in-postman)
+      - [2.4.2 Verification](#242-verification)
     - [2.5 Adding a review to the FarmStall API](#25-adding-a-review-to-the-farmstall-api)
       - [Forming a POST request in Postman](#forming-a-post-request-in-postman)
-      - [Verification](#verification-1)
+      - [Verification](#verification)
     - [2.6 Practice](#26-practice)
       - [Cat (and other animal) facts API](#cat-and-other-animal-facts-api)
       - [Random avatar API](#random-avatar-api)
@@ -730,21 +731,245 @@ team and organization workflows.
 
 ## 2 Getting set up to make API requests
 
+This chapter covers
+
+- Introducing the FarmStall API and some of its business logic
+- Introducing a tool to make HTTP requests: Postman
+- Executing API requests and inspecting the responses
+
+Our task in this part of the book is to describe an API called FarmStall.
+FarmStall was designed specifically for this book, and it is intentionally as
+simple as possible. Before we can describe this API, we’ll need to
+understand how it works and be able to make HTTP requests and inspect the
+responses.
+
+In this chapter we’ll use a tool called Postman to make HTTP requests
+against the FarmStall API (see figure 2.1). We’ll be verifying that we get
+decent-looking responses without concerning ourselves too much with the
+details of those responses. We’ll also take a basic look at the business
+domain of the API. We won’t go into great detail, but we’ll learn enough so
+that we have an understanding of what we’re doing. This will make it easier
+to describe later on.
+
+![Where we are](Docs/img/6.png)
+These are the sources for the points we’ll be touching on:
+
+- Postman—<https://getpostman.com>
+- FarmStall API landing page—<https://farmstall.designapis.com>
+- FarmStall API—<https://farmstall.designapis.com/v1/reviews>
+- Source code (in Go)—<https://github.com/designapis/farmstall>
+
 ### 2.1 The problem
+
+Our problem in this chapter is to discover and learn more about the
+FarmStall API. In particular, we want to interact with it and confirm some
+basics, such as how to access it, create requests, and inspect the responses.
+
+First, let’s look at the API itself.
 
 #### armStall API overview
 
+The FarmStall API is hosted at <https://farmstall.designapis.com/v1>. The
+API’s primary focus is to allow patrons of a farmer’s market to write up
+reviews and give feedback on their experiences. Users can submit
+anonymous reviews, which include a message and a rating (from 1 to 5inclusive). Users can also sign up to create reviews that will then be
+associated with them. Once they are signed up, they can get a user token to
+create reviews with their user ID.
+
 #### he first two operations of the FarmStall API
+
+The FarmStall API has several operations, and we’ll try out the following
+two, summarized in table 2.1:
+
+To get a list of public reviews, you can use GET /reviews. You can
+also filter reviews by their rating by using the maxRating query
+parameter.
+
+To submit a new review, you can use POST /reviews. The body of
+this request will include message and rating fields.
+
+![API operations](Docs/img/7.png)
+
+Based on the preceding information, including where the API is hosted
+(<https://farmstall.designapis.com/v1>) and the details of each operation, we
+can create our first two requests. Our task in this chapter is to verify that
+responses come back from each operation and that they make sense to us.
+
+So how do we make these HTTP requests? Fortunately for API folks, there
+are numerous ways to make these requests—the brave may want to try their
+hand using telnet, the practical may choose to use curl, and the rest of us
+may prefer to use software suites with bells, whistles, and bunches of
+utilities.
+
+NOTE ⚠️ Although no one really writes HTTP requests by hand, we encourage you to give it a try. It
+is actually quite satisfying when you form an HTTP request completely from scratch and get aresponse. We’ve included the small section 2.7 at the end of this chapter explaining how to craft a
+request using low-level tools: telnet (for HTTP) and OpenSSL (for HTTPS).
+
+There are many ways to make HTTP requests, and we’ve tried to structure
+this book in such a way as to avoid requiring particular tools. However, we
+still encourage you to try out the suggested tools as is, to more closely
+follow along with our explanations. Perhaps you’ll discover features that you
+can incorporate into your own arsenal.
+
+Without further ado, let’s take a look at Postman.
 
 ### 2.2 Getting set up with Postman
 
+Postman is a general HTTP tool that has a pleasant user interface and is
+suitable for beginners and professionals alike. Postman has a lot of features,
+and at first glance it can be a bit overwhelming. We’ll only be using a small
+subset of them in this book.
+
+We chose Postman as a tool for this book predominantly because of its
+popularity (so that you’re not stuck using an esoteric tool like some that we
+use) and because of the many features it provides. Some features you’ll find
+useful, and others you might find inspirational.
+
+In order to use Postman, you need to install it, so go ahead and download it
+from www.getpostman.com/downloads/. There are versions for Microsoft
+Windows, macOS, and most Linux distributions.
+
+At the time of writing, Postman was at version 9.x, and your version may
+look and act a little differently, depending on how much the authors of
+Postman change it in the interim. The UI has been pretty stable, so it should
+look similar to the screenshots in this chapter.
+
+Also, when this book was being written, you did not need to create an
+account with Postman in order to use it, although they will encourage you to
+do so. There are free and paid-for plans, as well as the option to not create
+any account at all. For this chapter we’ll assume you didn’t create an
+account, so we’ll only use features that are available to unregistered users,
+which should be ample for our purposes.
+Go ahead and install Postman, we’ll wait. 😁
+
 ### 2.3 FarmStall API
+
+To come to grips with the basics of creating an HTTP request, we’re going
+to execute two of them: a GET request with query parameters and a POST
+request with a JSON request body. We’ll progressively examine the details
+of these operations as we go along. To start with, we’re going to focus more
+on the practical side of making requests and less on what the operations are
+actually doing.
+
+NOTE  ⚠️ We designed the FarmStall API specifically for this book, to help us describe an existing
+API. It wasn’t designed to handle production-level data, so the data in the FarmStall API will persist,
+but only for a day or two. If you add a review one day and don’t see it the next, you’re not going crazy
+—the API is just cleaning up so that it doesn’t overflow with too much data.
+
+Let’s start by getting a list of reviews from the API.
 
 ### 2.4 Our first request
 
+We’ll use the GET operation described at the beginning of this chapter to get
+the list of reviews.
+
+The details are listed in table 2.2. The GET method has at least one query
+parameter called maxRating, which accepts a number from 1 to 5 inclusive.
+
+[Using GET /reviews](Docs/img/8.png)
+
 #### Forming a GET request in Postman
 
-#### Verification
+Operations are often described relative to where the server is hosted, and this
+API has a base URL of <https://farmstall.designapis.com/v1>, so the URL for
+GET /reviews becomes
+
+```URI
+https://farmstall.designapis.com/v1/reviews
+```
+
+If we add in the query parameter, it’ll form our final URL:
+
+```URI
+https://farmstall.designapis.com/v1/reviews?maxRating=5
+```
+
+Armed with the URL and method, we have enough to execute this particular
+request—time to use Postman.
+
+#### 2.4.1 Forming a GET request in Postman
+
+If you haven’t done so already, start up Postman. Figure 2.2 shows the key
+
+- areas in the main page that we are interested in for our GET request:
+Method dropdown—This selects the method to use. The default will
+likely be GET, but you can select it if not.
+- URL input box—This is where you will enter the URL of the endpoint
+you want to make the request against.
+- Send Request button—This button executes the request.
+
+![Postman—the key areas for the GET request](Docs/img/9.png)
+
+To create a request against our endpoint, we need to enter the URL in the
+URL input box and press the Send button, so go ahead and type<https://farmstall.designapis.com/v1/reviews?maxRating=5>.
+Press Send, and a chunk of JSON data should be displayed (see figure 2.3).
+This is the result of executing the request. If you see this JSON data—
+congratulations, you’ve successfully executed a request!
+
+small part of the response
+
+```json
+[
+    {
+        "message": "was pretty good.",
+        "rating": 4,
+        "uuid": "add5336b-6c80-43a5-94dd-5c116eba0591",
+        "userId": null
+    },
+    {
+        "message": "Not to bad",
+        "rating": 3,
+        "uuid": "4c38dd9e-8645-4667-b69d-c2d21ae1ec74",
+        "userId": null
+    },
+    {
+        "message": "neckbeard",
+        "rating": 5,
+        "uuid": "e4bcbcf4-38e9-417b-97db-6152aa6ef2e3",
+        "userId": null
+    },
+]
+```
+
+NOTE ⚠️ If for some reason you encountered an error in the response, that’s okay. It could be that
+there is a typo, that the server is misbehaving, or some other unforeseen problem. If you’re happy that
+you wrote the request correctly, that is enough for now. We’ll provide more examples later in the
+chapter that you can test against.
+
+#### 2.4.2 Verification
+
+We now have some response data from our request, confirming that our API
+works and that we can reach it. The response data should look similar to the
+following.
+
+```json
+[
+    {
+        "message": "was pretty good.",
+        "rating": 4,
+        "uuid": "add5336b-6c80-43a5-94dd-5c116eba0591",
+        "userId": null
+    },
+    {
+        "message": "Not to bad",
+        "rating": 3,
+        "uuid": "4c38dd9e-8645-4667-b69d-c2d21ae1ec74",
+        "userId": null
+    },
+    {
+        "message": "neckbeard",
+        "rating": 5,
+        "uuid": "e4bcbcf4-38e9-417b-97db-6152aa6ef2e3",
+        "userId": null
+    },
+]
+```
+
+We’ve successfully verified that some reasonable data is returned when we
+execute the request. Later we’ll need to describe this data, but for now it’s
+enough that the operation works and does indeed return data.
+
+Now let’s try creating a new review by executing a POST request.
 
 ### 2.5 Adding a review to the FarmStall API
 
