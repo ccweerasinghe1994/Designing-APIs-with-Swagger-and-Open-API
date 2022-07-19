@@ -16,6 +16,7 @@
       - [For API producers](#for-api-producers)
       - [For API designers](#for-api-designers)
     - [1.8 This book](#18-this-book)
+    - [Summary](#summary)
   - [2 Getting set up to make API requests](#2-getting-set-up-to-make-api-requests)
     - [2.1 The problem](#21-the-problem)
       - [armStall API overview](#armstall-api-overview)
@@ -655,9 +656,77 @@ specific to your needs that will work with any API described by OpenAPI.
 
 #### For API producers
 
+Building APIs can be quite fun, particularly when you have a contract to
+develop against, but building out the boilerplate of an HTTP server is less
+fun once you’ve done it umpteen times. Automatically generating boilerplatecode and stubs from an OpenAPI definition gives you speed and consistency
+(since you can customize the templates to your needs).
+
+There are even more exciting methods of developing APIs, such as using
+OpenAPI definitions during runtime to act as a router (having API
+operations map to classes and methods in code) or as a validation layer
+(where incoming requests will fail validation unless they conform to the
+OpenAPI definition’s schema). Such practices are becoming more common
+in microservice-oriented architectures where services are being built out at a
+faster rate.
+
 #### For API designers
 
+API design has also been given more attention of late, and its importance
+cannot be understated. While we’re a huge fan of Agile practices (short
+feedback cycles) and the art of failing fast (bringing products to market
+quicker to validate their success or failure), APIs should still be designed
+with longevity in mind because changing them means changing the
+consumers, which is typically beyond your control. (No one likes getting
+stuck maintaining an old API!) OpenAPI is a medium for communicating to
+both consumers and producers, allowing designers to get feedback early in
+the process and to iterate based on that feedback.
+
+Design becomes even more interesting when it comes to managing more
+than one API. In those cases, consistency plays an important role.
+Standardizing all your APIs on consistent patterns becomes possible when
+you can measure those patterns. OpenAPI definitions offer one such
+measurement.
+
 ### 1.8 This book
+
+This book aims to help you understand how OpenAPI works, how it and the
+associated tooling can be used to design APIs, and how you can create
+advanced and very specific workflows for your team and organization.
+
+OpenAPI is aimed at automating parts of your workflow and freeing your
+team to accomplish more. The small upfront cost of describing APIs withOpenAPI is greatly offset by the power you can wield by leveraging it and
+the new opportunities it presents.
+
+![Where we are](Docs/img/5.png)
+This book is broken down into three parts:
+
+- Part 1 deals with OpenAPI literacy and introduces you to the syntax and
+structure of OpenAPI definitions, giving you the ability to describe
+APIs. Throughout this part we’ll document an example FarmStall API
+that is hosted online and is simple enough to easily understand without
+knowing the details. We’ll use figure 1.3 to indicate where we are in the
+scheme of things.
+- Part 2 deals with the design phase and how we can use the tools to
+create a new API and iterate its design. We’ll be designing a pet-sitting
+API from scratch, along with the processes around it.
+- Part 3 is a deeper dive into some more specific tools and workflows,
+particularly related to releasing an API to the public.
+
+### Summary
+
+- OpenAPI is a specification for describing HTTP-based APIs, most
+notably RESTful APIs.
+- Swagger is a term that refers to a set of tools by SmartBear. It used to
+refer to the OpenAPI specification itself and is sometimes still used that
+way.
+- Describing APIs by writing a definition (a YAML file) allows you to
+leverage tools to automate a lot of API-related processes.
+- OpenAPI is useful for consumers, producers, and API designers. Each
+can benefit from knowing and utilizing tools that consume OpenAPI
+definitions.
+- This book will explain how to work with OpenAPI. With this
+knowledge base, you can ultimately incorporate OpenAPI into your
+team and organization workflows.
 
 ## 2 Getting set up to make API requests
 
