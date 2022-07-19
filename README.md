@@ -354,16 +354,16 @@ the principle of an interactive, symbiotic system remains. If we borrow
 the world of APIs within a team or organization:
 
 - The living, changing variables represent elements that we have control
-over. These are the things we make, such as our services, stacks, or
-code.
+  over. These are the things we make, such as our services, stacks, or
+  code.
 
 - The fixed, nonliving components are the useful things we can benefit
-from but cannot easily change. These are the libraries and external
-services we use.
+  from but cannot easily change. These are the libraries and external
+  services we use.
 
 - And, of course, there is the environment. It could be the internet, an
-internal network, or a tiny device stuck on the roof of our house—
-perhaps even all of them.
+  internal network, or a tiny device stuck on the roof of our house—
+  perhaps even all of them.
 
 All of these pieces together form a complete ecosystem. When these parts
 are moving in harmony, our system is healthy, and our developers,
@@ -398,11 +398,108 @@ Let’s look at a story that illustrates this idea.
 
 #### Bridget’s task
 
+Bridget has been tasked with managing a medium-sized web stack. Her stack
+(or ecosystem) is made up of services that talk to and depend on each other.
+The stack also makes use of external services that are beyond her control.
+Every now and then, one of the APIs will change in such a way as to
+negatively impact, and sometimes break, the services that rely on it. This
+disrupts the ecosystem, bringing down parts of her stack and ultimately
+causing failures.
+
+Bridget needs to effectively solve this problem. When an API changes, she
+needs to be able to tell the affected developers beforehand and keep the
+ecosystem running smoothly.
+
+Bridget takes a moment to think about how this ecosystem works. She
+knows that each service has an API, and that each of those APIs is made up
+of smaller operations. Each operation expects a certain input and generates a
+resulting output. When an operation changes so that it requires different
+inputs, any service that doesn’t adapt along with it will result in a systemic
+failure. Similarly, if an operation changes to produce a different output, it
+will cause other dependent services to break unless they are updated to
+address those changes. Bridget concludes that tracking API changes is an
+important part of keeping the overall functionality up. But how will she
+know when an API has changed?
+
+Bridget decides she needs a way of describing APIs so that she can compare
+an old API with a new one to see if the new one has any breaking changes.
+She writes a program that compares the description of an older API with that
+of a newer version, generating a report. The report is simple and just tells her
+if the new API has any breaking changes since the older version.
+
+Happy with her plan, she instructs the developers to describe their APIs
+using her format so that she can compare old with new. Aware that the
+external services aren’t under her control, she keeps an eye on those
+developments and describes them herself—she feels prepared for when those
+external services change.
+
 #### The potential of Bridget’s solution
+
+Bridget’s solution is centered around the idea that APIs can be described,
+that people can write these descriptions, and that software can understand
+them.
+
+While she only used that approach to solve one specific problem, there is
+much potential for growth with those descriptions. They could serve as the
+basis for generating more than just reports. For example, she could generate
+documentation, test changes before building them, reduce the overhead of
+boilerplate code, and much more.
+
+Let’s take a look at how Bridget’s solution is used in the real world. Let’s
+look at how OpenAPI works.
 
 ### 1.3 What is OpenAPI?
 
+OpenAPI specifies a way of describing HTTP-based APIs, which are
+typically RESTful APIs (more on what REST is later). An OpenAPI
+definition comes in the form of a YAML or JSON file that describes the
+inputs and outputs of an API. It can also include information such as where
+the API is hosted, what authorization is required to access it, and other
+details needed by consumers and producers (such as web developers).
+
+Definitions can be written by hand or by tools, or even be generated from
+code. Once an API has been written down, we say it has been described, and
+it then becomes a platform that tools and humans can make use of. A typical
+way of using API definitions is to generate human-readable documentation
+from it.
+
 #### Example OpenAPI definition
+
+![img](Docs/img/1.png)
+
+There is a fun little API for dog breeds and their images on the internet,
+hosted at <https://dog.ceo>. To give you an example of what an OpenAPI
+definition looks like, we’ve described a single operation along with some
+other basic details of this Dog API (as a YAML file).
+
+![img](Docs/img/2.png)
+
+An OpenAPI definition can seem a little verbose at first glance, but you will
+find some exceptionally useful information contained within. In this
+example, we can learn a few things about the single operation it describes
+and how to consume it. Don’t worry if you can’t make the connection
+between the YAML file and every one of the following statements yet. We’re
+just getting started, and we’ll unpack OpenAPI definitions step by step in
+this book. That said, here is what we could discover in the preceding listing:
+
+- The API is hosted at <https://dog.ceo/api>.
+- There is a GET operation with the path
+  /breed/{breedName}/images.
+- This path has a part called breedName, and it is a required string.
+  A successful response will give us a JSON array where each item is an
+- object containing message and status fields.The message field is an array of strings that are URLs of dog images.
+
+That is usable information. Developers can build clients to consume the API,
+product managers can determine if the API suits their needs and meets their
+standards, and documentation teams can use it as the basis for showing
+human-readable documentation.
+
+To use this OpenAPI definition, we could load it into a tool called Swagger
+UI (we’ll discuss that later in the book), which renders human-friendly
+documentation based on the definition and provides other small niceties. The
+result would look something like figure
+
+![Swagger UI with the Dog API](Docs/img/3.png)
 
 ### 1.4 Where do OpenAPI definitions fit in?
 
