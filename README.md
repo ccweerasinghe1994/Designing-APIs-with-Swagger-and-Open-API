@@ -32,10 +32,10 @@
         - [Listing 2.2 JSON request body for POST /review](#listing-22-json-request-body-for-post-review)
       - [2.5.2 Verification](#252-verification)
     - [2.6 Practice](#26-practice)
-      - [Cat (and other animal) facts API](#cat-and-other-animal-facts-api)
-      - [Random avatar API](#random-avatar-api)
-      - [DuckDuckGo’s search engine API](#duckduckgos-search-engine-api)
-      - [Pirate talk API](#pirate-talk-api)
+      - [2.6.1 Cat (and other animal) facts API](#261-cat-and-other-animal-facts-api)
+      - [2.6.2 Random avatar API](#262-random-avatar-api)
+      - [2.6.3 DuckDuckGo’s search engine API](#263-duckduckgos-search-engine-api)
+      - [2.6.4 Pirate talk API](#264-pirate-talk-api)
     - [2.7 HTTP for the brave](#27-http-for-the-brave)
   - [3 Our first taste of OpenAPI definitions](#3-our-first-taste-of-openapi-definitions)
     - [3.1 The problem](#31-the-problem)
@@ -1068,17 +1068,192 @@ interchangeably. You can use whichever feels more natural, but if in doubt, use 
 
 #### 2.5.2 Verification
 
+What have we accomplished so far? We’ve successfully executed two
+requests: one for getting the list of reviews, and another for creating a new
+review.
+
+For now, just seeing reasonable data is enough. Soon we’ll describe these
+operations in a way that clarifies what is possible, without actually executing
+requests and making assumptions about the data.
+
+Now that we’re able to make basic requests with Postman, we can have a
+little fun and practice with more APIs.
+
 ### 2.6 Practice
 
-#### Cat (and other animal) facts API
+Now for a bit of practice! The following HTTP requests are a short list of
+APIs that have fun, interesting, or perhaps even useful responses. Given the
+nature of the internet, it’s entirely possible that some (hopefully not all) of
+these APIs will become unavailable or, worse, change their interfaces so that
+these requests will fail. The latter is something we hope to avoid when
+designing our own APIs. We considered the APIs in this section to be stable
+enough at the time of print. Only time will tell how stable!
 
-#### Random avatar API
+We’ve included example responses that you can compare with your own.
+Here are the requests.
 
-#### DuckDuckGo’s search engine API
+#### 2.6.1 Cat (and other animal) facts API
 
-#### Pirate talk API
+This first API provides a little fun with cat (and other animal) facts.
+
+[cat facts](https://cat-fact.herokuapp.com/#/cat/facts)
+
+![cat facts](Docs/img/12.png)
+
+#### 2.6.2 Random avatar API
+
+This one is for those times when you need a random avatar image (see figure
+2.6), and it includes some animated ones.
+
+[Minimal Avatars API](Docs/img/13.png)
+
+#### 2.6.3 DuckDuckGo’s search engine API
+
+This is DuckDuckGo’s search engine API.
+
+![DuckDuckGo API](Docs/img/14.png)
+
+#### 2.6.4 Pirate talk API
+
+And because the world needs more “pirate speak,” someone went and made
+an API for that too!
+
+![Pirate translator API](Docs/img/15.png)
 
 ### 2.7 HTTP for the brave
+
+As promised, here is the bonus section on how to craft an HTTP request
+completely from scratch. If you’re feeling less than brave, you’re welcome
+to give this section a skip. There will be a bit of low-level jargon in this
+section, and you may spontaneously start sporting a neck beard if you
+continue. You’ve been warned!
+
+There are two utilities you can use to open a TCP connection (a pipe you can
+read data from and write it into) suitable for HTTP requests. The first is
+telnet, which is available on most systems, and the other is OpenSSL, which
+is typically found on *nix (Linux, macOS, etc.) systems. OpenSSL can be
+used to open a TCP connection over SSL/TLS, which is necessary for
+HTTPS-only servers.
+
+We’re going to assume a *nix system here, as we haven’t tried these
+commands on Windows. The syntax for telnet may differ on that system.
+
+The following two commands will open the connection.
+
+Listing 2.8 Opening a TCP connection
+
+```bash
+$ telnet farmstall.designapis.com 80
+# Or for HTTPS sites...
+$ openssl s_client -qui et -connect farmstall.designapis.com:443
+```
+
+After running either of those commands, your terminal will pause and wait
+for you to enter the text you want to send to the server. By entering the
+content of listing 2.9, we can get a list of reviews.
+
+Listing 2.9 Using GET /v1/reviews over TCP
+
+```html
+GET /v1/reviews HTTP/1.1 <enter> ❶
+Host: farmstall.designapis.com <enter> ❷
+<enter> ❸
+```
+
+❶ This is the status line, which includes the method, URI, and version of HTTP protocol.
+
+❷ The host header is important because a lot of servers host multiple sites and use the host header to
+determine which site you are asking for.
+
+❸ A blank line separates the headers from the body section.
+
+You should get back a response, including headers and a body. Here is an
+OpenSSL example with its response.
+
+Listing 2.10 OpenSSL connection with a response
+
+```bash
+$ openssl s_client -quiet -connect \
+farmstall.designapis.com:443 ❶
+
+depth=0 CN = letsencrypt-nginx-proxy-companion ❷ verify error:num=18:self signed certificate
+verify return:1
+depth=0 CN = le tsencrypt-nginx-proxy-companion
+verify return:1
+
+GET /v1/reviews HTTP/1.1 ❸ Host: farmstall.designapis.com
+
+HTTP/1.1 200 OK ❹ Server: nginx/1.17.5
+Date: Thu, 14 Nov 20 19 09:24:50 GMT
+Content-Type: application/json
+Content-Length: 465
+Connection: keep-al ive
+Vary: Origin
+X-Ratelimit- Limit: 36
+X-Ratelimit-Remaining : 35
+X-Ratelimit-Reset: 157372 3550
+
+[{"uuid":"16f5e7e1-b581-4ca4-8af2-8dead5894869","message":"Was okay.",
+"rating":3,"userId":""},{"uuid":"92da1efe-a0ab-40a5-bbb9-466e7c32e96d" ,
+"message":"Was terrible.","rating":1,"userId":""},{"uuid":
+"5ca80db6-82f7-41a6-8c54-19fb7db77a31", "message":"hello", "rating":5,
+"userId":""},{"uuid":"13151e0e-f3e7-4f33-ad5b-d4bda9adf496","message" :
+"hello", "rating":5,"userId":""},{"uuid":
+"e4d99a5c-5883-43e7-8133-bb05bf34d0d9","m essage":"Was awesome!","rating":5,
+"userId":""}] ❺
+
+```
+
+❶ The openssl command to open up the connection
+
+❷ Some connection details (not typed)
+
+❸ Typing out the HTTP request
+
+❹ The start of the response (not typed)
+
+❺ The response body (not typed)
+
+Now let’s create a new review (and add a body to our request). After
+creating a connection using the telnet or openssl command, type the
+content of the next listing.
+
+Listing 2.11 Creating a new review over TCP
+
+```bash
+POST /v1/reviews HTTP/1.1 <enter> ❶ Host: farmstall.designapis.com <enter>
+Content-Length: 37 <enter> ❷
+Content-Type: application/json <enter> ❸
+<enter> ❹
+{"message": "neckbeard", "rating": 5} <enter> ❺
+```
+
+❶ Use the POST method.
+
+❷ Indicate the size of the body (we counted it for you).
+
+❸ Specify the media type of the payload.
+
+❹ Add a blank line to separate the header section from the body.
+
+❺ Enter the body (all 37 characters in this example).
+
+As soon as you hit that last <enter>, you should get a response. Note that if
+you increase the Content-Length to a larger value, your response will
+only be returned after you press Enter multiple times.
+
+That is the HTTP protocol, and you wrote GET and POST requests by hand!
+That is brave.
+
+Summary
+
+- The FarmStall API is a trivial example designed for this book so we
+could illustrate an existing API.
+- Postman is an HTTP client that can be used to execute requests against an API and view the
+responses.
+- Executing requests gives you a way to explore an API, to verify that it works, and to inspect real
+data via the responses.
+- HTTP requests can be written by hand using tools such as telnet for HTTP and OpenSSL for HTTPS.
 
 ## 3 Our first taste of OpenAPI definitions
 
