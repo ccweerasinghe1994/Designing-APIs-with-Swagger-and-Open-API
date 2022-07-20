@@ -1257,9 +1257,112 @@ data via the responses.
 
 ## 3 Our first taste of OpenAPI definitions
 
+This chapter covers
+
+- Informal versus formal descriptions
+- Learning about the OpenAPI specification
+- Learning about YAML
+- Describing our first GET operation
+
+OpenAPI definitions are at the heart of automating our API workflows. They
+are the slices of bread in a sandwich shop, the fruit on a breakfast buffet, and
+the vanilla in vanilla muffins, which is our way of saying that they’re
+important.
+
+When we formally describe an API, we’re turning the idea of that API into
+some data, which we call a definition. It differs from an informal description,
+which has no strict rules or syntactical structure. Informal descriptions are
+akin to documentation found on websites—great for humans to read, but
+hard for machines to decipher.
+
+Once an API has been described in a definition, the definition can be used by
+tools (machines) fueling different parts of the API ecosystem, such as API
+request validation, code stubs, documentation, and more. Figure 3.1
+illustrates where definitions fit into the scheme of things.
+
+![Tool and workflow examples around OpenAPI definition](Docs/img/16.png)
+
+If movies have taught us anything, it’s that machines shouldn’t have too
+much power, else they’ll take over the world. However, they should be able
+to help us out just a little!
+
+WARNING 💀 API definitions both excite and propel us, and as such, we will continue to wax
+lyrical on the merits of API definitions. You’ve been warned!
+
+In this chapter we’re going to write a formal definition of a single operation
+from the FarmStall API. To get there, we’ll first need to understand what
+that operation requires. Then we’ll take a look at YAML, and finally we’ll
+write an OpenAPI definition fragment (not a complete OpenAPI definition).
+
+We’ll be touching on the following topics:
+
+- FarmStall API—<https://farmstall.designapis.com/v1>
+- YAML—<https://yaml.org/>
+- OpenAPI specification—<https://github.com/OAI/OpenAPISpecification>
+
+We’ll also be covering GET operations and query parameters
+
+![Where we are](Docs/img/17.png)
+
 ### 3.1 The problem
 
+In this chapter we want to formally describe a single operation from the
+FarmStall API. We’ll supply the details of that operation and build up to the
+fragment. We’re not going to add the boilerplate required in an OpenAPI
+definition, so this definition won’t pass validation. We’ll soon look at that.
+
+At the end of this chapter, we’ll have an OpenAPI fragment that looks like
+the following.
+
+Listing 3.1 The OpenAPI fragment we’ll describe
+
+![OpenAPI fragment](Docs/img/18.png)
+
+The following listing provides an informal description of FarmStall’s GET
+/reviews.
+
+Listing 3.2 Summary of GET /reviews
+
+```bash
+GET /reviews
+Returns a list of reviews in the FarmStall API.
+The list can be filtered down by the maxRating query parameter.
+Each review is an object with at least the message and rating f ields.
+```
+
+In addition to the critical parts of this operation, such as the method (GET)
+and the URI (/reviews), we’ll also be describing the maxRating
+parameter (see table 3.1). What we won’t be describing is the response body.
+
+Table 3.1 Parameter of GET /reviews
+
+![table](Docs/img/19.png)
+
+NOTE API descriptions fall on a scale from vague or useless to pedantically precise. The latter is
+preferred but it’s sometimes too expensive or impractical to produce, so the usual goal is to achieve a
+good balance. A good rule of thumb is to get the description to the point where developers are able to
+build a client without having access to the hosted API. This will mean they have enough information,
+though more is of course desirable—especially considering that the machines in the API ecosystem
+can leverage the information in OpenAPI definitions. You’ll need to weigh the costs and ensure you
+don’t waste time on noncritical parts of the system. You can also start with a basic definition and
+expand on it later to add more detail. At some point, however, adding to the description might produce
+diminishing returns.
+
 ### 3.2 Introducing the OpenAPI specification
+
+Formal descriptions need a standard or specification—a source of truth for
+how to describe a thing. The OpenAPI specification is a formal way of
+describing RESTful or HTTP-based APIs. It is tantamount to a template.
+
+If you do follow the template, both humans and machines will be able to
+make use of your description via generally available tools. They’ll not only
+understand what you’re describing but will also be able to use it as part of
+their system with far less effort than if it were described using a bespoke
+specification.
+
+Let’s look at the following fragment of an OpenAPI definition.
+
+![Listing 3.3 A taste of OpenAPI](Docs/img/20.png))
 
 ### 3.3 A quick refresher on YAML
 
